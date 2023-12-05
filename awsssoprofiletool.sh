@@ -135,6 +135,15 @@ else
     interactive=true
 fi
 
+# Prompts to remove spaces from profile name
+echo -n "Would you like to remove spaces from profile names? (Y/n): "
+read remove_spaces_resp < /dev/tty
+remove_spaces=false
+if [ "$remove_spaces_resp" == 'Y' ] || [ "$remove_spaces_resp" == 'y' ];
+then
+    remove_spaces=true
+fi
+
 # Retrieve accounts first
 
 echo
@@ -169,6 +178,15 @@ do
     echo
     echo "Adding roles for account $acctnum ($acctname)..."
     rolesfile="$(mktemp ./sso.roles.XXXXXX)"
+
+        # Remove spaces from the account name to use as the profile name if
+        # remove_spaces is true
+        if $remove_spaces ;
+        then
+            profile_name=${acctname// /_}
+        else
+            profile_name=$acctname
+        fi
 
     # Set up trap to clean up both temp files
     trap '{ rm -f "$rolesfile" "$acctsfile"; echo; exit 255; }' SIGINT SIGTERM
@@ -207,7 +225,7 @@ do
 	    defoutput=$output
 	fi
 
-	p="$acctname"
+	p="$profile_name"
 	while true ; do
 	    if $interactive ;
 	    then
