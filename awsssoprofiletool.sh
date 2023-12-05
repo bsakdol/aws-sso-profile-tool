@@ -34,7 +34,7 @@ PROFILEFILE="$HOME/.aws/config"
 if [ $# -lt 2 ];
 then
     echo "Syntax: $0 <region> <start_url> [<profile_file>]"
-    exit 1 
+    exit 1
 fi
 
 if [ $# -eq 3 ];
@@ -144,7 +144,7 @@ acctsfile="$(mktemp ./sso.accts.XXXXXX)"
 
 # Set up trap to clean up temp file
 trap '{ rm -f "$acctsfile"; echo; exit 255; }' SIGINT SIGTERM
-    
+
 aws sso list-accounts --access-token "$token" --page-size $ACCOUNTPAGESIZE --region "$1" --output text > "$acctsfile"
 
 if [ $? -ne 0 ];
@@ -172,7 +172,7 @@ do
 
     # Set up trap to clean up both temp files
     trap '{ rm -f "$rolesfile" "$acctsfile"; echo; exit 255; }' SIGINT SIGTERM
-    
+
     aws sso list-account-roles --account-id "$acctnum" --access-token "$token" --page-size $ROLEPAGESIZE --region "$1" --output text > "$rolesfile"
 
     if [ $? -ne 0 ];
@@ -195,7 +195,7 @@ do
 	    then
 		continue
 	    fi
-	    
+
 	    echo
 	    echo -n "CLI default client Region [$defregion]: "
 	    read awsregion < /dev/tty
@@ -206,8 +206,8 @@ do
 	    if [ -z "$output" ]; then output=$defoutput ; fi
 	    defoutput=$output
 	fi
-	
-	p="$rolename-$acctnum"
+
+	p="$acctname"
 	while true ; do
 	    if $interactive ;
 	    then
@@ -223,7 +223,7 @@ do
 	    else
 		profilename=$p
 	    fi
-	    
+
 	    if [ $(grep -ce "^\s*\[\s*profile\s\s*$profilename\s*\]" "$profilefile") -eq 0 ];
 	    then
 		break
