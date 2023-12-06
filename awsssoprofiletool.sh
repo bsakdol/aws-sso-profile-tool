@@ -171,7 +171,14 @@ while IFS=$'\t' read skip acctnum acctname acctowner; do
     # Remove spaces from the account name to use as the profile name if
     # remove_spaces is true
     if $remove_spaces; then
-        profile_name=${acctname// /_}
+        # Replace spaces around a dash with no space
+        profile_name=${acctname// - /-}
+
+        # Replace remaining spaces with underscores
+        profile_name=${profile_name// /_}
+
+        # Remove special characters not suitable for bash
+        profile_name=${profile_name//[^a-zA-Z0-9_-]/}
     else
         profile_name=$acctname
     fi
